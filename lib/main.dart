@@ -7,7 +7,7 @@ import 'package:mannona_try_e_commerce/services/product_services.dart';
 import 'package:mannona_try_e_commerce/services/seller_services.dart'
     show SliderApiService;
 import 'package:mannona_try_e_commerce/services/user_services.dart';
-import 'services/api_client.dart';
+import 'utils/api_client.dart';
 
 void main() {
   runApp(const MannonaApp());

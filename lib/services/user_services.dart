@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:mannona_try_e_commerce/services/api_client.dart';
+import 'package:mannona_try_e_commerce/utils/api_client.dart';
 
 class UserApiService {
   final Dio _dio = ApiClient.dio;
