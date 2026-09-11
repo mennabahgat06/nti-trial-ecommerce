@@ -1,8 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:mannona_try_e_commerce/services/category_services.dart';
+import 'package:mannona_try_e_commerce/services/order_services.dart';
+import 'package:mannona_try_e_commerce/services/product_services.dart';
+import 'package:mannona_try_e_commerce/services/seller_services.dart'
+    show SliderApiService;
+import 'package:mannona_try_e_commerce/services/user_services.dart';
 import 'services/api_client.dart';
-import 'services/api_services.dart';
 
 void main() {
   runApp(const MannonaApp());
@@ -35,7 +40,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final UserApiService _userService = UserApiService();
   final ProductApiService _productService = ProductApiService();
@@ -46,7 +52,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   String _consoleOutput = 'جاهز للتجربة! اضغط على أي زر لتشغيل الـ Request.';
   bool _isLoading = false;
 
-  final TextEditingController _urlController = TextEditingController(text: ApiClient.baseUrl);
+  final TextEditingController _urlController =
+      TextEditingController(text: ApiClient.baseUrl);
   final TextEditingController _tokenController = TextEditingController();
 
   @override
@@ -63,7 +70,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     super.dispose();
   }
 
-  Future<void> _executeRequest(String label, Future<Response> Function() action) async {
+  Future<void> _executeRequest(
+      String label, Future<Response> Function() action) async {
     setState(() {
       _isLoading = true;
       _consoleOutput = 'جاري تنفيذ: $label...';
@@ -108,7 +116,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           children: [
             Icon(Icons.shopping_bag_outlined),
             SizedBox(width: 8),
-            Text('Mannona Try E-Commerce', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text('Mannona Try E-Commerce',
+                style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
         actions: [
@@ -166,13 +175,18 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 children: [
                   Icon(Icons.terminal, color: Colors.greenAccent, size: 18),
                   SizedBox(width: 6),
-                  Text('Response Console', style: TextStyle(color: Colors.greenAccent, fontWeight: FontWeight.bold)),
+                  Text('Response Console',
+                      style: TextStyle(
+                          color: Colors.greenAccent,
+                          fontWeight: FontWeight.bold)),
                 ],
               ),
               IconButton(
-                icon: const Icon(Icons.clear_all, color: Colors.white70, size: 20),
+                icon: const Icon(Icons.clear_all,
+                    color: Colors.white70, size: 20),
                 tooltip: 'مسح الكونسول',
-                onPressed: () => setState(() => _consoleOutput = 'الكونسول نظيف ومستعد.'),
+                onPressed: () =>
+                    setState(() => _consoleOutput = 'الكونسول نظيف ومستعد.'),
               ),
             ],
           ),
@@ -225,41 +239,50 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           title: 'إنشاء حساب جديد (Register)',
           icon: Icons.person_add,
           color: Colors.green,
-          onPressed: () => _executeRequest('Register', () => _userService.register(
-            name: 'Ahmed Saber',
-            email: 'ahmed${DateTime.now().millisecondsSinceEpoch}@gmail.com',
-            password: 'password123',
-            phone: '01004383942',
-          )),
+          onPressed: () => _executeRequest(
+              'Register',
+              () => _userService.register(
+                    name: 'Ahmed Saber',
+                    email:
+                        'ahmed${DateTime.now().millisecondsSinceEpoch}@gmail.com',
+                    password: 'password123',
+                    phone: '01004383942',
+                  )),
         ),
         _buildActionCard(
           title: 'جلب بيانات الحساب (Get User Data)',
           icon: Icons.badge,
           color: Colors.teal,
-          onPressed: () => _executeRequest('Get User Data', () => _userService.getUserData()),
+          onPressed: () => _executeRequest(
+              'Get User Data', () => _userService.getUserData()),
         ),
         _buildActionCard(
           title: 'تحديث الحساب (Update Profile)',
           icon: Icons.edit,
           color: Colors.orange,
-          onPressed: () => _executeRequest('Update Profile', () => _userService.updateProfile(
-            name: 'Ahmed Saber Updated',
-            phone: '01099999999',
-          )),
+          onPressed: () => _executeRequest(
+              'Update Profile',
+              () => _userService.updateProfile(
+                    name: 'Ahmed Saber Updated',
+                    phone: '01099999999',
+                  )),
         ),
         _buildActionCard(
           title: 'تجديد التوكن (Refresh Token)',
           icon: Icons.refresh,
           color: Colors.indigo,
-          onPressed: () => _executeRequest('Refresh Token', () => _userService.refreshToken(
-            ApiClient.refreshToken ?? 'sample_refresh_token',
-          )),
+          onPressed: () => _executeRequest(
+              'Refresh Token',
+              () => _userService.refreshToken(
+                    ApiClient.refreshToken ?? 'sample_refresh_token',
+                  )),
         ),
         _buildActionCard(
           title: 'حذف الحساب (Delete User)',
           icon: Icons.delete_forever,
           color: Colors.red,
-          onPressed: () => _executeRequest('Delete User', () => _userService.deleteUser()),
+          onPressed: () =>
+              _executeRequest('Delete User', () => _userService.deleteUser()),
         ),
       ],
     );
@@ -274,61 +297,71 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           title: 'جلب جميع المنتجات (Get Products)',
           icon: Icons.list_alt,
           color: Colors.purple,
-          onPressed: () => _executeRequest('Get Products', () => _productService.getProducts()),
+          onPressed: () => _executeRequest(
+              'Get Products', () => _productService.getProducts()),
         ),
         _buildActionCard(
           title: 'بحث عن منتجات (Search: "p")',
           icon: Icons.search,
           color: Colors.deepPurple,
-          onPressed: () => _executeRequest('Search Products', () => _productService.searchProducts('p')),
+          onPressed: () => _executeRequest(
+              'Search Products', () => _productService.searchProducts('p')),
         ),
         _buildActionCard(
           title: 'المنتجات الأكثر مبيعاً (Best Sellers)',
           icon: Icons.local_fire_department,
           color: Colors.amber.shade800,
-          onPressed: () => _executeRequest('Best Sellers', () => _productService.getBestSellers()),
+          onPressed: () => _executeRequest(
+              'Best Sellers', () => _productService.getBestSellers()),
         ),
         _buildActionCard(
           title: 'المنتجات الأعلى تقييماً (Top Rated)',
           icon: Icons.star,
           color: Colors.amber.shade700,
-          onPressed: () => _executeRequest('Top Rated', () => _productService.getTopRated()),
+          onPressed: () =>
+              _executeRequest('Top Rated', () => _productService.getTopRated()),
         ),
         _buildActionCard(
           title: 'إضافة منتج جديد (New Product)',
           icon: Icons.add_business,
           color: Colors.green,
-          onPressed: () => _executeRequest('New Product', () => _productService.addProduct(
-            name: 'Sample Product 2026',
-            description: 'Created from Mannona Flutter Dio tester',
-            rating: '4.8',
-            price: '99',
-            categoryId: '1',
-            isBestSeller: true,
-          )),
+          onPressed: () => _executeRequest(
+              'New Product',
+              () => _productService.addProduct(
+                    name: 'Sample Product 2026',
+                    description: 'Created from Mannona Flutter Dio tester',
+                    rating: '4.8',
+                    price: '99',
+                    categoryId: '1',
+                    isBestSeller: true,
+                  )),
         ),
         _buildActionCard(
           title: 'تعديل منتج رقم 3 (Edit Product)',
           icon: Icons.edit_note,
           color: Colors.orange,
-          onPressed: () => _executeRequest('Edit Product', () => _productService.editProduct(
-            id: '3',
-            name: 'Updated Product 3',
-            description: 'Updated Description',
-            price: '75',
-          )),
+          onPressed: () => _executeRequest(
+              'Edit Product',
+              () => _productService.editProduct(
+                    id: '3',
+                    name: 'Updated Product 3',
+                    description: 'Updated Description',
+                    price: '75',
+                  )),
         ),
         _buildActionCard(
           title: 'إضافة للمفضلة (Add to Favorite)',
           icon: Icons.favorite,
           color: Colors.pink,
-          onPressed: () => _executeRequest('Add to Favorite', () => _productService.addToFavorite('1')),
+          onPressed: () => _executeRequest(
+              'Add to Favorite', () => _productService.addToFavorite('1')),
         ),
         _buildActionCard(
           title: 'حذف منتج رقم 3 (Delete Product)',
           icon: Icons.delete_outline,
           color: Colors.red,
-          onPressed: () => _executeRequest('Delete Product', () => _productService.deleteProduct('3')),
+          onPressed: () => _executeRequest(
+              'Delete Product', () => _productService.deleteProduct('3')),
         ),
       ],
     );
@@ -339,72 +372,86 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const Text('الأقسام (Categories)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        const Text('الأقسام (Categories)',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         const SizedBox(height: 8),
         _buildActionCard(
           title: 'عرض الأقسام (Get Categories)',
           icon: Icons.category,
           color: Colors.cyan.shade700,
-          onPressed: () => _executeRequest('Get Categories', () => _categoryService.getCategories()),
+          onPressed: () => _executeRequest(
+              'Get Categories', () => _categoryService.getCategories()),
         ),
         _buildActionCard(
           title: 'إضافة قسم جديد (New Category)',
           icon: Icons.add_circle_outline,
           color: Colors.cyan,
-          onPressed: () => _executeRequest('New Category', () => _categoryService.addCategory(
-            title: 'Fashion & Clothes',
-            description: 'Top trending styles',
-          )),
+          onPressed: () => _executeRequest(
+              'New Category',
+              () => _categoryService.addCategory(
+                    title: 'Fashion & Clothes',
+                    description: 'Top trending styles',
+                  )),
         ),
         _buildActionCard(
           title: 'تعديل قسم رقم 2 (Edit Category)',
           icon: Icons.drive_file_rename_outline,
           color: Colors.orange,
-          onPressed: () => _executeRequest('Edit Category', () => _categoryService.editCategory(
-            id: '2',
-            title: 'Updated Category',
-            description: 'Updated description for cat 2',
-          )),
+          onPressed: () => _executeRequest(
+              'Edit Category',
+              () => _categoryService.editCategory(
+                    id: '2',
+                    title: 'Updated Category',
+                    description: 'Updated description for cat 2',
+                  )),
         ),
         _buildActionCard(
           title: 'حذف قسم رقم 1 (Delete Category)',
           icon: Icons.delete,
           color: Colors.redAccent,
-          onPressed: () => _executeRequest('Delete Category', () => _categoryService.deleteCategory('1')),
+          onPressed: () => _executeRequest(
+              'Delete Category', () => _categoryService.deleteCategory('1')),
         ),
         const SizedBox(height: 16),
-        const Text('السلايدرز (Sliders)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        const Text('السلايدرز (Sliders)',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         const SizedBox(height: 8),
         _buildActionCard(
           title: 'عرض السلايدرز (Get Sliders)',
           icon: Icons.view_carousel,
           color: Colors.blueGrey,
-          onPressed: () => _executeRequest('Get Sliders', () => _sliderService.getSliders()),
+          onPressed: () =>
+              _executeRequest('Get Sliders', () => _sliderService.getSliders()),
         ),
         _buildActionCard(
           title: 'إضافة سلايدر جديد (New Slider)',
           icon: Icons.add_photo_alternate,
           color: Colors.blueGrey.shade700,
-          onPressed: () => _executeRequest('New Slider', () => _sliderService.addSlider(
-            title: 'Special 50% Off Offer',
-            description: 'Summer season sale banner',
-          )),
+          onPressed: () => _executeRequest(
+              'New Slider',
+              () => _sliderService.addSlider(
+                    title: 'Special 50% Off Offer',
+                    description: 'Summer season sale banner',
+                  )),
         ),
         _buildActionCard(
           title: 'تعديل سلايدر رقم 1 (Edit Slider)',
           icon: Icons.edit,
           color: Colors.orange,
-          onPressed: () => _executeRequest('Edit Slider', () => _sliderService.editSlider(
-            id: '1',
-            title: 'Updated Slider 1',
-            description: 'Updated banner description',
-          )),
+          onPressed: () => _executeRequest(
+              'Edit Slider',
+              () => _sliderService.editSlider(
+                    id: '1',
+                    title: 'Updated Slider 1',
+                    description: 'Updated banner description',
+                  )),
         ),
         _buildActionCard(
           title: 'حذف سلايدر رقم 1 (Delete Slider)',
           icon: Icons.delete_forever,
           color: Colors.redAccent,
-          onPressed: () => _executeRequest('Delete Slider', () => _sliderService.deleteSlider('1')),
+          onPressed: () => _executeRequest(
+              'Delete Slider', () => _sliderService.deleteSlider('1')),
         ),
       ],
     );
@@ -419,30 +466,35 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           title: 'جلب الطلبات (Get Orders)',
           icon: Icons.list_alt,
           color: Colors.brown,
-          onPressed: () => _executeRequest('Get Orders', () => _orderService.getOrders()),
+          onPressed: () =>
+              _executeRequest('Get Orders', () => _orderService.getOrders()),
         ),
         _buildActionCard(
           title: 'إنشاء طلب جديد (Place Order)',
           icon: Icons.add_shopping_cart,
           color: Colors.green,
-          onPressed: () => _executeRequest('Place Order', () => _orderService.placeOrder(
-            items: [
-              {'product_id': 1, 'quantity': 2},
-              {'product_id': 2, 'quantity': 1},
-            ],
-          )),
+          onPressed: () => _executeRequest(
+              'Place Order',
+              () => _orderService.placeOrder(
+                    items: [
+                      {'product_id': 1, 'quantity': 2},
+                      {'product_id': 2, 'quantity': 1},
+                    ],
+                  )),
         ),
         _buildActionCard(
           title: 'إلغاء طلب رقم 1 (Cancel Order)',
           icon: Icons.cancel,
           color: Colors.orange.shade800,
-          onPressed: () => _executeRequest('Cancel Order 1', () => _orderService.cancelOrder('1')),
+          onPressed: () => _executeRequest(
+              'Cancel Order 1', () => _orderService.cancelOrder('1')),
         ),
         _buildActionCard(
           title: 'إتمام وتأكيد طلب رقم 3 (Complete Order)',
           icon: Icons.check_circle,
           color: Colors.teal,
-          onPressed: () => _executeRequest('Complete Order 3', () => _orderService.completeOrder('3')),
+          onPressed: () => _executeRequest(
+              'Complete Order 3', () => _orderService.completeOrder('3')),
         ),
       ],
     );
@@ -460,15 +512,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: color.withOpacity(0.15),
+          backgroundColor: color.withValues(alpha: 0.15),
           child: Icon(icon, color: color),
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+        title: Text(title,
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
         trailing: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: color,
             foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
           onPressed: onPressed,
           child: const Text('Send'),
